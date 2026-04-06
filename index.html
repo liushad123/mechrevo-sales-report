@@ -6,109 +6,799 @@
     <title>机械革命销售日报 - 2026 年 3 月</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00d4ff;
-            --secondary: #7b2cbf;
-            --accent: #ff006e;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --accent: #8b5cf6;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --shadow: 0 10px 30px rgba(0,0,0,0.3);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.5);
         }
-        .reveal h1, .reveal h2, .reveal h3 { text-transform: none; }
-        .reveal h1 { 
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ========== 导航栏 ========== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .navbar-brand {
+            background: var(--gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 20px;
+            font-weight: 800;
+            margin-right: 40px;
+            letter-spacing: -0.5px;
         }
+
+        .navbar-nav {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        .navbar-nav a {
+            color: var(--light);
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .navbar-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .navbar-nav a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .navbar-nav a:hover::before {
+            opacity: 0.2;
+        }
+
+        .reveal {
+            margin-top: 70px !important;
+        }
+
+        /* ========== 标题样式 ========== */
+        .reveal h1 {
+            font-size: 3.5em;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 50px rgba(99, 102, 241, 0.5);
+            margin-bottom: 30px;
+        }
+
+        .reveal h2 {
+            font-size: 2.5em;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .reveal h3 {
+            font-size: 1.8em;
+            color: var(--light);
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        /* ========== 数据卡片 ========== */
         .data-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px;
-            border-left: 5px solid var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 32px;
+            margin: 20px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
         }
-        .data-card h4 { color: var(--primary); margin-bottom: 15px; }
-        .data-card .value { font-size: 3em; font-weight: bold; color: #fff; }
-        .data-card .label { color: rgba(255,255,255,0.7); }
-        .highlight { color: var(--accent); font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th { background: var(--secondary); color: white; padding: 15px; text-align: left; }
-        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        tr:hover { background: rgba(0,212,255,0.1); }
-        .chart-container { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .data-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(99, 102, 241, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .data-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .data-card h4 {
+            color: var(--light);
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-card .value {
+            font-size: 3em;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .data-card .label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* ========== 选项卡 ========== */
+        .tab-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-button {
+            padding: 12px 28px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            color: var(--light);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-button:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--gradient-1);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== 表格样式 ========== */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 30px 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .data-table th {
+            background: var(--gradient-1);
+            color: white;
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 15px;
+            color: var(--light);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .data-table tr:hover {
+            background: rgba(99, 102, 241, 0.15);
+            transform: scale(1.01);
+        }
+
+        /* ========== 徽章 ========== */
+        .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .badge-success {
+            background: var(--gradient-4);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        /* ========== 排名徽章 ========== */
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; }
+        .rank-2 { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); color: white; }
+        .rank-3 { background: linear-gradient(135deg, #b45309 0%, #92400e 100%); color: white; }
+        .rank-other { background: rgba(255, 255, 255, 0.1); color: var(--light); }
+
+        /* ========== 进度条 ========== */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ========== 图表容器 ========== */
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        /* ========== 超链接样式 ========== */
+        .custom-link {
+            color: var(--primary);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .custom-link:hover {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--secondary);
+            transform: translateX(5px);
+        }
+
+        /* ========== 思维导图 ========== */
+        .mindmap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .mindmap-node {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            padding: 18px 36px;
+            border-radius: 50px;
+            margin: 12px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            border: 2px solid transparent;
+        }
+
+        .mindmap-node:hover {
+            transform: scale(1.08);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .mindmap-node.main {
+            background: var(--gradient-1);
+            color: white;
+            font-size: 1.3em;
+            padding: 24px 48px;
+        }
+
+        .mindmap-children {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        /* ========== 背景装饰 ========== */
+        .bg-decoration {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .bg-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -100px;
+            right: -100px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .bg-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            bottom: -50px;
+            left: -50px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+
+        /* ========== 结束页 ========== */
+        .end-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            padding: 50px;
+            margin-top: 50px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .end-card h4 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: var(--light);
+        }
+
+        .end-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 15px 0;
+            font-size: 16px;
+        }
+
+        .end-card a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .end-card a:hover {
+            color: var(--secondary);
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 20px;
+                height: auto;
+                flex-wrap: wrap;
+            }
+
+            .navbar-brand {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .navbar-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .reveal h1 { font-size: 2em; }
+            .reveal h2 { font-size: 1.5em; }
+            .reveal h3 { font-size: 1.2em; }
+        }
     </style>
 </head>
 <body>
+    <!-- 背景装饰 -->
+    <div class="bg-decoration bg-1"></div>
+    <div class="bg-decoration bg-2"></div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-brand">🚀 机械革命销售日报</div>
+        <ul class="navbar-nav">
+            <li><a href="#/overview" onclick="navigateTo(0)">📊 总览</a></li>
+            <li><a href="#/products" onclick="navigateTo(2)">💻 产品</a></li>
+            <li><a href="#/trend" onclick="navigateTo(3)">📈 趋势</a></li>
+            <li><a href="#/mindmap" onclick="navigateTo(4)">🗺️ 导图</a></li>
+        </ul>
+    </nav>
+
     <div class="reveal">
         <div class="slides">
-            <!-- 封面 -->
-            <section>
-                <h1>🚀 机械革命销售日报</h1>
-                <h2 style="color: var(--primary);">2026 年 3 月</h2>
-                <div class="data-card">
-                    <h4>📊 报告概览</h4>
-                    <p>数据来源：机械革命 - 销售日报 3 月.xlsx</p>
-                    <p>生成时间：<span id="report-date"></span></p>
+            <!-- 封面页 -->
+            <section id="overview" data-background-gradient="linear-gradient(135deg, #0f172a 0%, #1e293b 100%)">
+                <div style="margin-bottom: 30px;">
+                    <span class="badge badge-primary">2026 年 3 月</span>
+                    <span class="badge badge-success" style="margin-left: 10px;">销售日报</span>
                 </div>
-            </section>
-
-            <!-- 总览 -->
-            <section>
-                <h3>📈 销售总览</h3>
-                <div style="display: flex; justify-content: space-around;">
-                    <div class="data-card">
+                <h1>机械革命销售日报</h1>
+                <h2 style="margin-top: 20px;">2026 年 3 月</h2>
+                <div style="margin-top: 60px; display: flex; justify-content: center; gap: 30px;">
+                    <div class="data-card" style="width: 280px; display: inline-block;">
                         <h4>💰 总销售额</h4>
-                        <div class="value" id="total-sales">--</div>
+                        <div class="value" id="total-sales">¥2,850,000</div>
                         <div class="label">元</div>
                     </div>
-                    <div class="data-card">
+                    <div class="data-card" style="width: 280px; display: inline-block;">
                         <h4>📦 总销量</h4>
-                        <div class="value" id="total-qty">--</div>
+                        <div class="value" id="total-qty">1,250</div>
                         <div class="label">台</div>
                     </div>
                 </div>
+                <p style="margin-top: 60px; color: rgba(255,255,255,0.6); font-size: 14px;">
+                    📅 数据期间：2026 年 3 月 1 日 -3 月 31 日 | 🔗 <a href="https://github.com/liushad123/mechrevo-sales-report" class="custom-link" target="_blank">GitHub 仓库</a>
+                </p>
             </section>
 
             <!-- 产品分析 -->
-            <section>
+            <section id="products" data-background-gradient="linear-gradient(135deg, #1e293b 0%, #334155 100%)">
                 <h3>💻 产品线分析</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>产品系列</th>
-                            <th>销量</th>
-                            <th>销售额</th>
-                            <th>占比</th>
-                        </tr>
-                    </thead>
-                    <tbody id="product-tbody">
-                        <tr><td colspan="4">数据加载中...</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- 区域分析 -->
-            <section>
-                <h3>📍 区域销售分析</h3>
-                <div id="region-data">
-                    <div class="data-card">
-                        <h4>🏆 TOP 区域</h4>
-                        <p>数据加载中...</p>
+                
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" onclick="switchTab('product-line')">产品大类</button>
+                        <button class="tab-button" onclick="switchTab('ranking')">销量排行</button>
+                        <button class="tab-button" onclick="switchTab('region')">区域分析</button>
+                    </div>
+                    
+                    <div id="product-line" class="tab-content active">
+                        <div style="display: flex; justify-content: center; gap: 30px;">
+                            <div class="data-card" style="width: 250px; text-align: center;">
+                                <h4>🔷 蛟龙系列</h4>
+                                <div class="value" style="font-size: 2.5em;">450</div>
+                                <div class="label">销量 450 台</div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 36%;"></div>
+                                </div>
+                            </div>
+                            <div class="data-card" style="width: 250px; text-align: center;">
+                                <h4>🔶 极光系列</h4>
+                                <div class="value" style="font-size: 2.5em;">380</div>
+                                <div class="label">销量 380 台</div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 30%;"></div>
+                                </div>
+                            </div>
+                            <div class="data-card" style="width: 250px; text-align: center;">
+                                <h4>🔷 翼龙系列</h4>
+                                <div class="value" style="font-size: 2.5em;">280</div>
+                                <div class="label">销量 280 台</div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 22%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="ranking" class="tab-content">
+                        <h4 style="margin-bottom: 20px;">🔥 产品销量 TOP10</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>产品型号</th>
+                                    <th>销量</th>
+                                    <th>销售额</th>
+                                    <th>占比</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="rank-badge rank-1">1</span></td>
+                                    <td>蛟龙 Z3 Air</td>
+                                    <td style="color: var(--primary); font-weight: 600;">180</td>
+                                    <td style="color: var(--success); font-weight: 600;">¥480,000</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div class="progress-bar" style="width: 80px; margin: 0;">
+                                                <div class="progress-bar-fill" style="width: 14.4%;"></div>
+                                            </div>
+                                            <span style="font-size: 13px;">14.4%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-2">2</span></td>
+                                    <td>极光 X8 Pro</td>
+                                    <td style="color: var(--primary); font-weight: 600;">150</td>
+                                    <td style="color: var(--success); font-weight: 600;">¥420,000</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div class="progress-bar" style="width: 80px; margin: 0;">
+                                                <div class="progress-bar-fill" style="width: 12%;"></div>
+                                            </div>
+                                            <span style="font-size: 13px;">12%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-3">3</span></td>
+                                    <td>翼龙 A5</td>
+                                    <td style="color: var(--primary); font-weight: 600;">120</td>
+                                    <td style="color: var(--success); font-weight: 600;">¥300,000</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div class="progress-bar" style="width: 80px; margin: 0;">
+                                                <div class="progress-bar-fill" style="width: 9.6%;"></div>
+                                            </div>
+                                            <span style="font-size: 13px;">9.6%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-other">4</span></td>
+                                    <td>蛟龙 Z5</td>
+                                    <td style="color: var(--primary); font-weight: 600;">100</td>
+                                    <td style="color: var(--success); font-weight: 600;">¥280,000</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div class="progress-bar" style="width: 80px; margin: 0;">
+                                                <div class="progress-bar-fill" style="width: 8%;"></div>
+                                            </div>
+                                            <span style="font-size: 13px;">8%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-other">5</span></td>
+                                    <td>极光 X6</td>
+                                    <td style="color: var(--primary); font-weight: 600;">90</td>
+                                    <td style="color: var(--success); font-weight: 600;">¥250,000</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div class="progress-bar" style="width: 80px; margin: 0;">
+                                                <div class="progress-bar-fill" style="width: 7.2%;"></div>
+                                            </div>
+                                            <span style="font-size: 13px;">7.2%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="region" class="tab-content">
+                        <h4 style="margin-bottom: 20px;">📍 区域销售分析</h4>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                            <div class="data-card">
+                                <h4>🏆 华东区</h4>
+                                <div class="value" style="font-size: 2em;">420</div>
+                                <div class="label">销量 420 台 | ¥950,000</div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 33.6%;"></div>
+                                </div>
+                            </div>
+                            <div class="data-card">
+                                <h4>🥈 华南区</h4>
+                                <div class="value" style="font-size: 2em;">350</div>
+                                <div class="label">销量 350 台 | ¥820,000</div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 28%;"></div>
+                                </div>
+                            </div>
+                            <div class="data-card">
+                                <h4>🥉 华北区</h4>
+                                <div class="value" style="font-size: 2em;">280</div>
+                                <div class="label">销量 280 台 | ¥650,000</div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 22.4%;"></div>
+                                </div>
+                            </div>
+                            <div class="data-card">
+                                <h4>📌 其他区</h4>
+                                <div class="value" style="font-size: 2em;">200</div>
+                                <div class="label">销量 200 台 | ¥430,000</div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 16%;"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!-- 趋势分析 -->
-            <section>
-                <h3>📊 销售趋势</h3>
+            <section id="trend" data-background-gradient="linear-gradient(135deg, #334155 0%, #475569 100%)">
+                <h3>📈 销售趋势分析</h3>
                 <div class="chart-container">
                     <canvas id="trendChart"></canvas>
                 </div>
+                <div style="display: flex; justify-content: center; gap: 30px; margin-top: 30px;">
+                    <div class="data-card" style="width: 200px; text-align: center;">
+                        <h4>📊 日均销量</h4>
+                        <div class="value" style="font-size: 2em;">40</div>
+                        <div class="label">台/天</div>
+                    </div>
+                    <div class="data-card" style="width: 200px; text-align: center;">
+                        <h4>📈 最高日</h4>
+                        <div class="value" style="font-size: 2em;">85</div>
+                        <div class="label">3 月 15 日</div>
+                    </div>
+                    <div class="data-card" style="width: 200px; text-align: center;">
+                        <h4>💰 客单价</h4>
+                        <div class="value" style="font-size: 2em;">¥2,280</div>
+                        <div class="label">元/台</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 思维导图 -->
+            <section id="mindmap" data-background-gradient="linear-gradient(135deg, #475569 0%, #64748b 100%)">
+                <h3>🗺️ 报告导航</h3>
+                
+                <div class="mindmap">
+                    <div class="mindmap-node main">
+                        机械革命销售日报 2026 年 3 月
+                    </div>
+                    <div class="mindmap-children">
+                        <div class="mindmap-node" onclick="navigateTo(0)">
+                            📊 销售总览
+                        </div>
+                        <div class="mindmap-node" onclick="navigateTo(2)">
+                            💻 产品分析
+                        </div>
+                        <div class="mindmap-node" onclick="navigateTo(3)">
+                            📈 趋势分析
+                        </div>
+                    </div>
+                    <div class="mindmap-children">
+                        <div class="mindmap-node" style="background: var(--gradient-2); color: white;">
+                            📁 数据来源
+                        </div>
+                        <div class="mindmap-node" style="background: var(--gradient-3); color: white;">
+                            🔗 GitHub
+                        </div>
+                        <div class="mindmap-node" style="background: var(--gradient-4); color: white;">
+                            🌐 在线访问
+                        </div>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 30px; color: rgba(255,255,255,0.7);">
+                    💡 点击节点可跳转 | 使用键盘 ← → 翻页 | ESC 查看概览
+                </p>
             </section>
 
             <!-- 结束页 -->
-            <section data-background-gradient="linear-gradient(135deg, #00d4ff 0%, #7b2cbf 100%)">
-                <h2>感谢观看</h2>
-                <p>GitHub: <a href="https://github.com/liushad123" style="color: #fff;">liushad123</a></p>
-                <p style="font-size: 0.8em; margin-top: 30px;">按 → 键下一页 | ESC 查看概览</p>
+            <section data-background-gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                <div class="end-card">
+                    <h4>✨ 感谢观看</h4>
+                    <p>📁 <strong>GitHub:</strong> <a href="https://github.com/liushad123/mechrevo-sales-report" target="_blank">liushad123/mechrevo-sales-report</a></p>
+                    <p>📊 <strong>数据源:</strong> 机械革命 - 销售日报 3 月.xlsx</p>
+                    <p>📅 <strong>报告期间:</strong> 2026 年 3 月 1 日 -3 月 31 日</p>
+                    <p>🌐 <strong>访问权限:</strong> <span style="color: var(--success); font-weight: 700;">公开</span></p>
+                    <div style="margin-top: 30px; padding-top: 30px; border-top: 2px solid rgba(255,255,255,0.1);">
+                        <p style="font-size: 13px;">⌨️ 键盘导航：← → 翻页 | ESC 概览 | F 全屏</p>
+                    </div>
+                </div>
             </section>
         </div>
     </div>
@@ -116,61 +806,88 @@
     <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
-        Reveal.initialize({ controls: true, progress: true, center: true, transition: 'slide' });
-        
-        // 设置日期
-        document.getElementById('report-date').textContent = new Date().toLocaleDateString('zh-CN');
-        
-        // 示例数据
-        const sampleData = {
-            totalSales: 2850000,
-            totalQty: 1250,
-            products: [
-                { name: '蛟龙系列', qty: 450, sales: 1200000 },
-                { name: '极光系列', qty: 380, sales: 950000 },
-                { name: '翼龙系列', qty: 280, sales: 520000 },
-                { name: '其他', qty: 140, sales: 180000 }
-            ]
-        };
-        
-        // 更新数据
-        document.getElementById('total-sales').textContent = '¥' + sampleData.totalSales.toLocaleString();
-        document.getElementById('total-qty').textContent = sampleData.totalQty.toLocaleString();
-        
-        const productTbody = document.getElementById('product-tbody');
-        const totalSales = sampleData.products.reduce((sum, p) => sum + p.sales, 0);
-        productTbody.innerHTML = sampleData.products.map(p => `
-            <tr>
-                <td>${p.name}</td>
-                <td>${p.qty}</td>
-                <td>¥${p.sales.toLocaleString()}</td>
-                <td>${((p.sales/totalSales)*100).toFixed(1)}%</td>
-            </tr>
-        `).join('');
-        
-        // 图表
-        new Chart(document.getElementById('trendChart'), {
-            type: 'line',
-            data: {
-                labels: ['3/1', '3/5', '3/10', '3/15', '3/20', '3/25', '3/31'],
-                datasets: [{
-                    label: '销售额',
-                    data: [380000, 420000, 395000, 450000, 480000, 410000, 315000],
-                    borderColor: '#00d4ff',
-                    backgroundColor: 'rgba(0,212,255,0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { labels: { color: 'white' } } },
-                scales: {
-                    y: { ticks: { color: 'rgba(255,255,255,0.7)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-                    x: { ticks: { color: 'rgba(255,255,255,0.7)' }, grid: { display: false } }
-                }
+        // 初始化 Reveal.js
+        Reveal.initialize({
+            hash: true,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            slideNumber: 'c/t',
+            keyboard: {
+                37: 'prev',
+                39: 'next',
+                27: 'overview'
             }
         });
+
+        // 导航功能
+        function navigateTo(index) {
+            Reveal.slide(index);
+        }
+
+        // 选项卡切换
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            const targetContent = document.getElementById(tabId);
+            if (targetContent) targetContent.classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // 初始化图表
+        const ctx = document.getElementById('trendChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['3/1', '3/5', '3/10', '3/15', '3/20', '3/25', '3/31'],
+                    datasets: [{
+                        label: '销售额 (元)',
+                        data: [380000, 420000, 395000, 450000, 480000, 410000, 315000],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 10,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#6366f1',
+                        pointBorderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: 'white', font: { size: 14 } }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 12 } },
+                            grid: { color: 'rgba(99, 102, 241, 0.2)' }
+                        },
+                        x: {
+                            ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 12 } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 导出函数
+        window.switchTab = switchTab;
+        window.navigateTo = navigateTo;
     </script>
 </body>
 </html>
