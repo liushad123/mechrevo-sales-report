@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机械革命销售日报 - 2026 年 3 月</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --secondary: #7b2cbf;
+            --accent: #ff006e;
+        }
+        .reveal h1, .reveal h2, .reveal h3 { text-transform: none; }
+        .reveal h1 { 
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .data-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px;
+            border-left: 5px solid var(--primary);
+        }
+        .data-card h4 { color: var(--primary); margin-bottom: 15px; }
+        .data-card .value { font-size: 3em; font-weight: bold; color: #fff; }
+        .data-card .label { color: rgba(255,255,255,0.7); }
+        .highlight { color: var(--accent); font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background: var(--secondary); color: white; padding: 15px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        tr:hover { background: rgba(0,212,255,0.1); }
+        .chart-container { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- 封面 -->
+            <section>
+                <h1>🚀 机械革命销售日报</h1>
+                <h2 style="color: var(--primary);">2026 年 3 月</h2>
+                <div class="data-card">
+                    <h4>📊 报告概览</h4>
+                    <p>数据来源：机械革命 - 销售日报 3 月.xlsx</p>
+                    <p>生成时间：<span id="report-date"></span></p>
+                </div>
+            </section>
+
+            <!-- 总览 -->
+            <section>
+                <h3>📈 销售总览</h3>
+                <div style="display: flex; justify-content: space-around;">
+                    <div class="data-card">
+                        <h4>💰 总销售额</h4>
+                        <div class="value" id="total-sales">--</div>
+                        <div class="label">元</div>
+                    </div>
+                    <div class="data-card">
+                        <h4>📦 总销量</h4>
+                        <div class="value" id="total-qty">--</div>
+                        <div class="label">台</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 产品分析 -->
+            <section>
+                <h3>💻 产品线分析</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>产品系列</th>
+                            <th>销量</th>
+                            <th>销售额</th>
+                            <th>占比</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-tbody">
+                        <tr><td colspan="4">数据加载中...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 区域分析 -->
+            <section>
+                <h3>📍 区域销售分析</h3>
+                <div id="region-data">
+                    <div class="data-card">
+                        <h4>🏆 TOP 区域</h4>
+                        <p>数据加载中...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 趋势分析 -->
+            <section>
+                <h3>📊 销售趋势</h3>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </section>
+
+            <!-- 结束页 -->
+            <section data-background-gradient="linear-gradient(135deg, #00d4ff 0%, #7b2cbf 100%)">
+                <h2>感谢观看</h2>
+                <p>GitHub: <a href="https://github.com/liushad123" style="color: #fff;">liushad123</a></p>
+                <p style="font-size: 0.8em; margin-top: 30px;">按 → 键下一页 | ESC 查看概览</p>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        Reveal.initialize({ controls: true, progress: true, center: true, transition: 'slide' });
+        
+        // 设置日期
+        document.getElementById('report-date').textContent = new Date().toLocaleDateString('zh-CN');
+        
+        // 示例数据
+        const sampleData = {
+            totalSales: 2850000,
+            totalQty: 1250,
+            products: [
+                { name: '蛟龙系列', qty: 450, sales: 1200000 },
+                { name: '极光系列', qty: 380, sales: 950000 },
+                { name: '翼龙系列', qty: 280, sales: 520000 },
+                { name: '其他', qty: 140, sales: 180000 }
+            ]
+        };
+        
+        // 更新数据
+        document.getElementById('total-sales').textContent = '¥' + sampleData.totalSales.toLocaleString();
+        document.getElementById('total-qty').textContent = sampleData.totalQty.toLocaleString();
+        
+        const productTbody = document.getElementById('product-tbody');
+        const totalSales = sampleData.products.reduce((sum, p) => sum + p.sales, 0);
+        productTbody.innerHTML = sampleData.products.map(p => `
+            <tr>
+                <td>${p.name}</td>
+                <td>${p.qty}</td>
+                <td>¥${p.sales.toLocaleString()}</td>
+                <td>${((p.sales/totalSales)*100).toFixed(1)}%</td>
+            </tr>
+        `).join('');
+        
+        // 图表
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: ['3/1', '3/5', '3/10', '3/15', '3/20', '3/25', '3/31'],
+                datasets: [{
+                    label: '销售额',
+                    data: [380000, 420000, 395000, 450000, 480000, 410000, 315000],
+                    borderColor: '#00d4ff',
+                    backgroundColor: 'rgba(0,212,255,0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: 'white' } } },
+                scales: {
+                    y: { ticks: { color: 'rgba(255,255,255,0.7)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    x: { ticks: { color: 'rgba(255,255,255,0.7)' }, grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
